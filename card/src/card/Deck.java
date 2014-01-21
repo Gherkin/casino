@@ -3,8 +3,8 @@ package card;
 import java.util.Random;
 
 public class Deck {
-    Card[] deck;
-    int size = 52;
+    private Card[] deck;
+    private int size = 52;
     
     Deck(boolean fill) {
         int c = 0;
@@ -45,31 +45,71 @@ public class Deck {
     }
     
     public Card returnCard(boolean remove) {
-        if(size == 0) {
+        if(size <= 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         
         Random random = new Random();
-        int cardNumber = random.nextInt(size);
+        int index = random.nextInt(size);
         Card card;
         
-        card = deck[cardNumber];
-        if(remove == true) {
-            deck[cardNumber] = deck[size - 1];
-            deck[size - 1] = null;
-            size--;
-        }
-        
+        card = deck[index];
+        if(remove == true)
+            remove(index);
         return card;             
+    }
+    
+    public Card get(int index) {
+        return deck[index];
+    }
+    
+    public int size() {
+        return size;
+    }
+    
+    public Deck suit(int suit, boolean remove) {
+        Deck suitDeck = new Deck(size);
+        
+        for(int i = 0; i < this.deck.length; ++i)
+            if(this.deck[i].suit() == suit) {
+                suitDeck.addCard(this.deck[i]);
+                if(remove)
+                    remove(i);
+            }
+        
+        return suitDeck;
+    }
+    
+        public Deck rank(int rank, boolean remove) {
+        Deck rankDeck = new Deck(size);
+        
+        for(int i = 0; i < this.deck.length; ++i)
+            if(this.deck[i].rank() == rank) {
+                rankDeck.addCard(this.deck[i]);
+                if(remove)
+                    remove(i);
+            }
+        
+        return rankDeck;
+    }
+    
+    public void remove(int index) {
+        if(size <= 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+                
+        deck[index] = deck[size - 1];
+        deck[size - 1] = null;
+        size--;
     }
     
     @Override
     public String toString() {
         String string = "";
-        if(size == 0)           
+        if(size == 0)
             throw new ArrayIndexOutOfBoundsException();
         for(int i = 0; i < size; i++) {
-            string = string + deck[i].toString();
+            string = string + "[" + i + "] " + deck[i].toString();
             if(i != size - 1)
                 string = string + ", ";
         }
@@ -82,5 +122,13 @@ public class Deck {
         ++size;
         deck[size - 1] = card;
         return true;
-    }            
+    }
+    
+    public boolean contains(Card card) {
+        for(Card deckCard : deck) {
+            if((deckCard.rank() == card.rank()) && (deckCard.suit() == card.suit()))
+                return true;
+        }
+        return false;
+    }
 }
