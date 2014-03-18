@@ -6,7 +6,7 @@ public class Deck {
     private Card[] deck;
     private int size = 52;
     
-    Deck(boolean fill) {
+    public Deck(boolean fill) {
         int c = 0;
         deck = new Card[52];
         if(fill == true) {
@@ -22,12 +22,12 @@ public class Deck {
             size = 0;
     }
     
-    Deck() {
+    public Deck() {
         size = 0;
         deck = new Card[52];
     }
     
-    Deck(boolean fill, int maxSize) {
+    public Deck(boolean fill, int maxSize) {
         deck = new Card[maxSize];
         if(fill == true) {
                 for(int i = 0; i < maxSize; ++i) {
@@ -39,77 +39,37 @@ public class Deck {
             size = 0;
     }
     
-    Deck(int maxSize) {
+    public Deck(int maxSize) {
         size = 0;
         deck = new Card[maxSize];
     }
     
     public Card returnCard(boolean remove) {
-        if(size <= 0) {
+        if(size == 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         
         Random random = new Random();
-        int index = random.nextInt(size);
+        int cardNumber = random.nextInt(size);
         Card card;
         
-        card = deck[index];
-        if(remove == true)
-            remove(index);
-        return card;             
-    }
-    
-    public Card get(int index) {
-        return deck[index];
-    }
-    
-    public int size() {
-        return size;
-    }
-    
-    public Deck suit(int suit, boolean remove) {
-        Deck suitDeck = new Deck(size);
-        
-        for(int i = 0; i < this.deck.length; ++i)
-            if(this.deck[i].suit() == suit) {
-                suitDeck.addCard(this.deck[i]);
-                if(remove)
-                    remove(i);
-            }
-        
-        return suitDeck;
-    }
-    
-        public Deck rank(int rank, boolean remove) {
-        Deck rankDeck = new Deck(size);
-        
-        for(int i = 0; i < this.deck.length; ++i)
-            if(this.deck[i].rank() == rank) {
-                rankDeck.addCard(this.deck[i]);
-                if(remove)
-                    remove(i);
-            }
-        
-        return rankDeck;
-    }
-    
-    public void remove(int index) {
-        if(size <= 0) {
-            throw new ArrayIndexOutOfBoundsException();
+        card = deck[cardNumber];
+        if(remove == true) {
+            deck[cardNumber] = deck[size - 1];
+            deck[size - 1] = null;
+            size--;
         }
-                
-        deck[index] = deck[size - 1];
-        deck[size - 1] = null;
-        size--;
+        
+        return card;             
     }
     
     @Override
     public String toString() {
         String string = "";
-        if(size == 0)
+        if(size == 0)           
             throw new ArrayIndexOutOfBoundsException();
         for(int i = 0; i < size; i++) {
-            string = string + "[" + i + "] " + deck[i].toString();
+            string = string + deck[i].toString();
             if(i != size - 1)
                 string = string + ", ";
         }
@@ -122,13 +82,13 @@ public class Deck {
         ++size;
         deck[size - 1] = card;
         return true;
+    }  
+    
+    public int size() {
+    	return size;
     }
     
-    public boolean contains(Card card) {
-        for(Card deckCard : deck) {
-            if((deckCard.rank() == card.rank()) && (deckCard.suit() == card.suit()))
-                return true;
-        }
-        return false;
+    public Card[] deck() {
+    	return deck;
     }
 }
