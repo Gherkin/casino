@@ -1,5 +1,10 @@
 package games;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,7 +17,7 @@ public class Casino {
     static Deck[] hands;
     static Deck table = new Deck();
 
-    static int players;
+    private int players;
     static ArrayList<Integer> takenCards = new ArrayList<Integer>();
 
     static Scanner sc = new Scanner(System.in);
@@ -20,7 +25,7 @@ public class Casino {
     static boolean cardsLeft = true;
 
 
-    public static boolean deal() {
+    private boolean deal() {
         if(deck.size() < players * 2)
             return false;
         for(int c = 0; c < players; c++) {
@@ -39,18 +44,11 @@ public class Casino {
 
         }
     }*/
-    public void initialize(int players) {
+    
+    private void initialize(int players) {
     	this.players = players;
     	hands = new Deck[players];
     	
-    	
-    }
-    public static void main(String[] args) {
-        System.out.println("How many players are there?");
-        players = sc.nextInt();
-        hands = new Deck[players];
-        System.out.println("Dealing to " + players + " players");
-
         for(int i = 0; i < players; i++)
             hands[i] = new Deck(4);
 
@@ -59,10 +57,16 @@ public class Casino {
             for(int e = 0; e < 2; e++) {
                 table.addCard(deck.returnCard(true));
             }
-        }
-    //    for(int i = 0; i < 5; i++) {
-    //        table.addCard(deck.returnCard(true));
-    //    }
+        }    	 	
+    }
+    
+    public void runGame(BufferedReader reader, BufferedWriter writer) throws IOException {
+        writer.write("How many players are there?");
+        writer.flush();
+        initialize(Integer.parseInt(reader.readLine()));
+        System.out.println("Dealing to " + players + " players");
+
+
         System.out.println("Table: " + table.toString());
         for(int i = 0; i < hands.length; i++) {
             System.out.println("Player " + i + "'s hand: " + hands[i].toString());
