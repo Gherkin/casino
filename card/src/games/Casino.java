@@ -3,15 +3,16 @@ package games;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import card.*;
 
-public class Casino {
-
+public class Casino extends Game {
+    static int maxPlayers = 4;
+    static int minPlayers = 2;
+    
+    
     static Deck[] won;
     static Deck deck = new Deck(true);
     static Deck[] hands;
@@ -35,17 +36,9 @@ public class Casino {
         }
         return true;
     }
-
-   /* static int[] moveChecker(int cardUsed, int[] takenCards) {
-        List<Integer> values = new ArrayList<Integer>();
-        for(int value : takenCards)
-            values.add(value);
-        while (!values.isEmpty()) {
-
-        }
-    }*/
     
-    private void initialize(int players) {
+    @Override
+    public void initialize() {
     	this.players = players;
     	hands = new Deck[players];
     	
