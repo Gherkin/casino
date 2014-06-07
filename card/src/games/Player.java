@@ -13,6 +13,10 @@ public class Player {
         this.ip = ip;
     }
     
+    public Player() {
+        
+    }
+    
     public Player(String nick) {
         this.nick = nick;
     }

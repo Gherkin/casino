@@ -5,9 +5,11 @@ import java.util.Random;
 public class Deck {
     private Card[] deck;
     private int size = 52;
+    private long lastEdited;
     
     public Deck(boolean fill) {
         int c = 0;
+        lastEdited = System.currentTimeMillis();
         deck = new Card[52];
         if(fill == true) {
                 for(int i = 0; i < 4; ++i) {
@@ -23,11 +25,13 @@ public class Deck {
     }
     
     public Deck() {
+        lastEdited = System.currentTimeMillis();
         size = 0;
         deck = new Card[52];
     }
     
     public Deck(boolean fill, int maxSize) {
+        lastEdited = System.currentTimeMillis();
         deck = new Card[maxSize];
         if(fill == true) {
                 for(int i = 0; i < maxSize; ++i) {
@@ -40,11 +44,13 @@ public class Deck {
     }
     
     public Deck(int maxSize) {
+        lastEdited = System.currentTimeMillis();
         size = 0;
         deck = new Card[maxSize];
     }
     
     public Card returnCard(boolean remove) {
+        lastEdited = System.currentTimeMillis();
         if(size == 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -77,6 +83,7 @@ public class Deck {
     }
     
     public boolean addCard(Card card) {
+        lastEdited = System.currentTimeMillis();
         if(size >= deck.length)
             return false;
         ++size;
@@ -85,10 +92,12 @@ public class Deck {
     }  
     
     public int size() {
+        lastEdited = System.currentTimeMillis();
     	return size;
     }
     
     public Card[] deck() {
+        lastEdited = System.currentTimeMillis();
     	return deck;
     }
 }

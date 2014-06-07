@@ -1,35 +1,41 @@
 package games;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
+import card.*;
+import event.Initiator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import card.*;
 
 public class Casino extends Game {
     static int maxPlayers = 4;
     static int minPlayers = 2;
     
     
-    static Deck[] won;
-    static Deck deck = new Deck(true);
-    static Deck[] hands;
-    static Deck table = new Deck();
+    private static Deck[] won;
+    private static Deck deck = new Deck(true);
+    private static Deck[] hands;
+    private static Deck table = new Deck();
 
-    private int players;
+    private GameRoom room;
+    private Player[] players;
     static ArrayList<Integer> takenCards = new ArrayList<Integer>();
+    Initiator initiator;
 
     static Scanner sc = new Scanner(System.in);
 
     static boolean cardsLeft = true;
 
-
+    public Casino(GameRoom room) {
+        initiator = new Initiator();
+        this.room = room;
+        players = (Player[]) room.players.values().toArray();
+    }
+    
     private boolean deal() {
-        if(deck.size() < players * 2)
+        if(deck.size() < players.length * 2)
             return false;
-        for(int c = 0; c < players; c++) {
+        for(int c = 0; c < players.length; c++) {
             for(int e = 0; e < 2; e++) {
                 hands[c].addCard(deck.returnCard(true));
             }
@@ -39,24 +45,24 @@ public class Casino extends Game {
     
     @Override
     public void initialize() {
-    	this.players = players;
-    	hands = new Deck[players];
-    	
-        for(int i = 0; i < players; i++)
+    	hands = new Deck[players.length];
+            
+        for(int i = 0; i <= players.length; i++) {
             hands[i] = new Deck(4);
+            networking.server.CardServer.initiator.deckEventOccured(deck, new Player[]{players[i]});
+        }
 
         for(int i = 0; i < 2; i++) {
             deal();
             for(int e = 0; e < 2; e++) {
                 table.addCard(deck.returnCard(true));
             }
-        }    	 	
+        }
+        networking.server.CardServer.initiator.deckEventOccured(table, players);
     }
     
-    public void runGame(BufferedReader reader, BufferedWriter writer) throws IOException {
-        writer.write("How many players are there?");
-        writer.flush();
-        initialize(Integer.parseInt(reader.readLine()));
+    public void runGame() throws IOException {
+
         System.out.println("Dealing to " + players + " players");
 
 
@@ -68,7 +74,7 @@ public class Casino extends Game {
         while (cardsLeft == true) {
             int cardPicked;
             for(int i = 0; i < 4; i++) {
-                for(int c = 0; c < players; c++) {
+                for(int c = 0; c < players.length; c++) {
                     System.out.println("It's player " + (c + 1) + "'s turn, pick a card to use");
                     cardPicked = sc.nextInt();
                     System.out.println("Do you want to use " + hands[c].deck()[cardPicked].toString() + " to take cards? true/false");

@@ -1,5 +1,6 @@
 package games;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class GameRoom {
@@ -34,5 +35,9 @@ public class GameRoom {
     
     public void changeGame(Game game) {
         currentGame = game;
+    }
+    
+    public Collection<Player> getPlayers() {
+        return players.values();
     }
 }
