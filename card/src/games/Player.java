@@ -7,14 +7,22 @@ public class Player {
     private InetSocketAddress ip;
     private Deck hand;
     private String nick;
+    private int id;
     
-    public Player(String nick, InetSocketAddress ip) {
+    public Player(String nick, InetSocketAddress ip, int id) {
         this.nick = nick;
         this.ip = ip;
     }
     
     public Player() {
         
+    }
+    public InetSocketAddress getIP() {
+        return ip;
+    }
+    
+    public int getID() {
+        return id;
     }
     
     public Player(String nick) {

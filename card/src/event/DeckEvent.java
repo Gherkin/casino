@@ -17,9 +17,11 @@ import games.Player;
 public class DeckEvent {
     public Player[] players;
     public Deck deck;
+    String deckType;
     
-    public DeckEvent(Deck deck, Player[] player) {
+    public DeckEvent(Deck deck, Player[] player, String deckType) {
         this.deck = deck;
         players = player;
+        this.deckType = deckType;
     }    
 }

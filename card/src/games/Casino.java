@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Casino extends Game {
     static int maxPlayers = 4;
     static int minPlayers = 2;
-    
+    static String[] deckTypes = {"hand", "table"};
     
     private static Deck[] won;
     private static Deck deck = new Deck(true);
@@ -49,7 +49,7 @@ public class Casino extends Game {
             
         for(int i = 0; i <= players.length; i++) {
             hands[i] = new Deck(4);
-            networking.server.CardServer.initiator.deckEventOccured(deck, new Player[]{players[i]});
+            networking.server.CardServer.initiator.deckEventOccured(deck, new Player[]{players[i]}, deckTypes[0]);
         }
 
         for(int i = 0; i < 2; i++) {
@@ -58,7 +58,7 @@ public class Casino extends Game {
                 table.addCard(deck.returnCard(true));
             }
         }
-        networking.server.CardServer.initiator.deckEventOccured(table, players);
+        networking.server.CardServer.initiator.deckEventOccured(table, players, deckTypes[1]);
     }
     
     public void runGame() throws IOException {

@@ -15,8 +15,8 @@ public class Initiator {
     public synchronized void removeListener(DeckListener toRemove) {
         listeners.remove(toRemove);
     }
-    public synchronized void deckEventOccured(Deck deck, Player[] player) {
-        DeckEvent deckEvent = new DeckEvent(deck, player);
+    public synchronized void deckEventOccured(Deck deck, Player[] player, String deckType) {
+        DeckEvent deckEvent = new DeckEvent(deck, player, deckType);
         for(DeckListener listener : listeners)
             listener.eventOccured(deckEvent);
     }

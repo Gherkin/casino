@@ -5,6 +5,8 @@ import card.*;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import event.DeckEvent;
+import games.GameRoom;
 import games.Player;
 import java.io.IOException;
 import java.util.Scanner;
@@ -20,6 +22,7 @@ public class CardClient {
         client.getKryo().register(Card.class);
         client.getKryo().register(String.class);
         client.getKryo().register(Integer.class);
+        client.getKryo().register(DeckEvent.class);
         client.start();
         try {
             client.connect(5000, "127.0.0.1", 54555, 54777);
@@ -31,7 +34,13 @@ public class CardClient {
         client.addListener(new Listener() {
             @Override
             public void received (Connection connection, Object object) {
-                if (object instanceof Integer) {
+                if(object instanceof GameRoom) {
+                    
+                }
+                else if(object instanceof DeckEvent) {
+                    
+                }
+                else if(object instanceof Integer) {
                     switch((Integer) object) {
                         case 1: System.out.println("Sucessfully changed nick");
                             break;

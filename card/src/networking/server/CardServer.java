@@ -12,14 +12,13 @@ import games.*;
 import games.Player;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import networking.User;
 
 public class CardServer {
-    private static HashMap<Player, User> clients = new HashMap<Player, User>();
+    private static HashMap<InetSocketAddress, Player> clients = new HashMap<InetSocketAddress, Player>();
     private static HashMap<String, GameRoom> rooms = new HashMap<String, GameRoom>();    
     public static Initiator initiator;
     public static void main(String[] args) {
@@ -29,6 +28,8 @@ public class CardServer {
         server.getKryo().register(Card.class);
         server.getKryo().register(String.class);
         server.getKryo().register(Integer.class);
+        server.getKryo().register(DeckEvent.class);
+        server.getKryo().register(GameRoom.class);
         server.start();
         initiator = new Initiator();
         
@@ -41,7 +42,7 @@ public class CardServer {
             @Override
             public void eventOccured(DeckEvent e) {
                 for(Player player : e.players) {
-                    server.getConnections()[clients.get(player).getID()].sendTCP(e.deck);
+                    server.getConnections()[clients.get(player.getIP()).getID()].sendTCP(e);
                 }
             }
         });
@@ -50,7 +51,7 @@ public class CardServer {
             @Override
             public void received (Connection connection, Object object) {
                 if(object instanceof Player) {
-                    clients.put((Player) object, new User(connection.getRemoteAddressTCP(), connection.getID()));
+                    clients.put(connection.getRemoteAddressTCP(), (Player) object);
                 }
                 if(object instanceof String) {
                     System.out.println((String) object);
@@ -62,7 +63,7 @@ public class CardServer {
                                 break;
                             }
                             //What if there is no player for that specific IP?
-                            clients.put(clients.get(connection.getRemoteAddressTCP()).setNick(split[1]), new User(connection.getRemoteAddressTCP(), connection.getID()));
+                            clients.put(connection.getRemoteAddressTCP(), clients.get(connection.getRemoteAddressTCP()).setNick(split[1]));
                             connection.sendTCP(1);
                             break;
                         case "ROOM":
@@ -96,7 +97,7 @@ public class CardServer {
                                     GameRoom newRoom = rooms.get(split[3]);
                                     newRoom.addPlayer(clients.get(connection.getRemoteAddressTCP()));
                                     rooms.replace(split[3], newRoom);
-                                    connection.sendTCP(3);
+                                    connection.sendTCP(newRoom);
                                     break;
                             }
                     }
